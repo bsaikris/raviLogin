@@ -1,15 +1,10 @@
 pipeline{
     agent any
     stages{
-        stage('clone'){
-            steps{
-                git 'https://github.com/bsaikris/raviLogin.git'
-            }
-        }
         stage('build'){
             steps{
                 sh label: '', script: 'mvn clean install'
-            }
+              }
         }    
     }
 }
