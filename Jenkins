@@ -4,7 +4,22 @@ pipeline{
         stage('build'){
             steps{
                 sh label: '', script: 'mvn clean install'
+                sh "mv target/*.war target/myweb.war"
               }
+        }
+        stage('deploy-dev'){
+            steps{
+                sshagent(['tomcat-uat']) {
+                    sh """
+                    scp -o StrictHostKeyChecking=no target/myweb.war  root@172.31.37.202:/opt/tomcat8/webapps/
+                    
+                    ssh root@172.31.37.202 /opt/tomcat8/bin/shutdown.sh
+                    
+                    ssh root@172.31.37.202 /opt/tomcat8/bin/startup.sh
+                
+                """
+                }
+            }
         }    
     }
 }
